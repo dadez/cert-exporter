@@ -41,6 +41,27 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.certManagerDeployment.deployment.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: "/data"
+              name: data
+        - name: cert-importer
+          image: "{{ .Values.certManagerDeployment.deployment.certImporter.image.repository }}:{{ .Values.certManagerDeployment.deployment.certImporter.image.tag }}"
+          imagePullPolicy: {{ .Values.certManagerDeployment.deployment.certImporter.image.pullPolicy }}
+          {{- with .Values.certManagerDeployment.deployment.certImporter.env  }}
+          env:
+            {{- toYaml . | nindent 12}}
+          {{- end}}          
+          ports:
+            - name: http
+              containerPort: 4500
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.certManagerDeployment.deployment.certImporter.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: "/uploads"
+              name: data
+            - mountPath: /auth
+              name: importer-credentials
       {{- with .Values.certManagerDeployment.deployment.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -53,3 +74,11 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "cert-exporter.fullname" . }}
+        - name: importer-credentials
+          secret:
+            secretName: {{ include "cert-exporter.fullname" . }}-importer
+
