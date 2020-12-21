@@ -50,11 +50,25 @@ spec:
           {{- with .Values.certManagerDeployment.deployment.certImporter.env  }}
           env:
             {{- toYaml . | nindent 12}}
-          {{- end}}          
+          {{- end}}
           ports:
             - name: http
               containerPort: 4500
               protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 4500
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            tcpSocket:
+              port: 4500
+            initialDelaySeconds: 5
+            periodSeconds: 20
+            timeoutSeconds: 2
           resources:
             {{- toYaml .Values.certManagerDeployment.deployment.certImporter.resources | nindent 12 }}
           volumeMounts:
