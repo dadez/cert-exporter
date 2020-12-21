@@ -11,9 +11,11 @@ certManagerDeployment:
       pullPolicy: IfNotPresent
       command: ["./app"]
       args:
-        - --secrets-annotation-selector=cert-manager.io/certificate-name
-        - --secrets-include-glob=*.crt
+        #- --secrets-annotation-selector=cert-manager.io/certificate-name
+        #- --secrets-include-glob=*.crt
         - --logtostderr
+        - --include-cert-glob=/data/*.pem
+        - --polling-period=1m
     imagePullSecrets: []
     nameOverride: ""
     fullnameOverride: ""
@@ -35,6 +37,48 @@ certManagerDeployment:
       # requests:
       #   cpu: 100m
       #   memory: 128Mi
+    
+
+    # adding a container to be able to import certificates
+    certImporter:
+      image:
+        repository: dadez/file-upload
+        tag: latest
+        pullPolicy: Always
+      env:
+        # - name: STATIC_FILES_PATH
+        #   value: "."
+        - name: AUTH_FILES_PATH
+          value: "/auth"
+        - name: UPLOADS_DIRECTORY_PATH
+          value: "/uploads"
+        # - name: LOG_LEVEL
+        #   value: "info"
+      imagePullSecrets: []
+      nameOverride: ""
+      fullnameOverride: ""
+
+      podSecurityContext: {}
+      # fsGroup: 2000
+
+      securityContext: {}
+        # capabilities:
+        #   drop:s
+        #   - ALL
+        # readOnlyRootFilesystem: true
+        # runAsNonRoot: true
+        # runAsUser: 1000
+
+      resources: {}
+        #   cpu: 100m
+        #   memory: 128Mi
+        # requests:
+        #   cpu: 100m
+        #   memory: 128Mi
+      
+      credentials:
+        username: user1
+        password: secret1
 
     nodeSelector: {}
 
