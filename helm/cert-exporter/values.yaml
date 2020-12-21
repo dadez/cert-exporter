@@ -46,10 +46,14 @@ certManagerDeployment:
         tag: latest
         pullPolicy: Always
       env:
+        # - name: STATIC_FILES_PATH
+        #   value: "."
         - name: AUTH_FILES_PATH
           value: "/auth"
         - name: UPLOADS_DIRECTORY_PATH
           value: "/uploads"
+        # - name: LOG_LEVEL
+        #   value: "info"
       imagePullSecrets: []
       nameOverride: ""
       fullnameOverride: ""
