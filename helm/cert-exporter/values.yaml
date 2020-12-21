@@ -11,11 +11,11 @@ certManagerDeployment:
       pullPolicy: IfNotPresent
       command: ["./app"]
       args:
-        - --secrets-annotation-selector=cert-manager.io/certificate-name
+        #- --secrets-annotation-selector=cert-manager.io/certificate-name
         #- --secrets-include-glob=*.crt
         - --logtostderr
         - --include-cert-glob=/data/*.pem
-        - --polling-period=15m
+        - --polling-period=1m
     imagePullSecrets: []
     nameOverride: ""
     fullnameOverride: ""
