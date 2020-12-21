@@ -48,6 +48,8 @@ certManagerDeployment:
       env:
         - name: AUTH_FILES_PATH
           value: "/auth"
+        - name: UPLOADS_DIRECTORY_PATH
+          value: "/uploads"
       imagePullSecrets: []
       nameOverride: ""
       fullnameOverride: ""
