@@ -15,7 +15,7 @@ certManagerDeployment:
         #- --secrets-include-glob=*.crt
         - --logtostderr
         - --include-cert-glob=/data/*.pem
-        - --polling-period=1m
+        - --polling-period=24h
     imagePullSecrets: []
     nameOverride: ""
     fullnameOverride: ""
@@ -43,8 +43,8 @@ certManagerDeployment:
     certImporter:
       image:
         repository: dadez/file-upload
-        tag: latest
-        pullPolicy: Always
+        tag: v0.0.21
+        pullPolicy: IfNotPresent
       env:
         # - name: STATIC_FILES_PATH
         #   value: "."
@@ -75,10 +75,15 @@ certManagerDeployment:
         # requests:
         #   cpu: 100m
         #   memory: 128Mi
-      
+
       credentials:
         username: user1
         password: secret1
+
+      persistentVolume:
+        storageClass: default
+          # annotations:
+            # trident.netapp.io/unixPermissions: "---rwxrwxrwx"
 
     nodeSelector: {}
 
@@ -94,15 +99,16 @@ certManagerDeployment:
   
     # Requires prometheus-operator to be installed
     serviceMonitor:
-      create: false
+      create: true
 
       # cannot be empty
       additionalLabels:
         prometheus.io/load-rule: "true"
+        # release: prometheus-service
     
       ## Scrape interval. If not set, the Prometheus default scrape interval is used.
       ##
-      interval: 20s
+      interval: 60s
 
       ## metric relabel configs to apply to samples before ingestion.
       ##
@@ -133,7 +139,7 @@ rbac:
 
   clusterRole:
     # New role to grant to the service account
-    create: true
+    create: false
     # Annotations to add to the service account
     annotations: {}
     # Rules for the Role
@@ -143,12 +149,13 @@ rbac:
       verbs: ["get", "list"]
   
   clusterRoleBinding:
-    create: true
+    create: false
 
 dashboards:
+  create: false
   # Labels to add to all dashboard ConfigMaps
   additionalLabels:
     grafana-dashboard: "1"
   certManagerDashboard:
-    create: true
+    create: false
   namespace: monitoring
