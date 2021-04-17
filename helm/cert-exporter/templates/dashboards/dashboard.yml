@@ -1,4 +1,3 @@
-{{- if .Values.dashboards.certManagerDashboard.create -}}
 ---
 {{- if .Values.dashboards.create -}}
 apiVersion: v1
