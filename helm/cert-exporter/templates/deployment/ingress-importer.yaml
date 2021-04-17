@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations: {}
+  labels:
+    {{ include "cert-exporter.certManagerDeploymentLabels" . | nindent 4 }}
+  name: {{ include "cert-exporter.fullname" . }}-importer
+spec:
+  rules:
+  - host: cert-exporter.locahost
+    http:
+      paths:
+      - backend:
+          serviceName: {{ include "cert-exporter.fullname" . }}-importer
+          servicePort: http
+        path: /
+

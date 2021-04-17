@@ -1,11 +1,13 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
+  {{- if .Values.certManagerDeployment.deployment.certImporter.persistentVolume.annotations }}
+  annotations:
+    {{ toYaml .Values.certManagerDeployment.deployment.certImporter.persistentVolume.annotations | indent 2 }}
+  {{- end }}
   name: {{ include "cert-exporter.fullname" . }}
-  labels:
-    {{ include "cert-exporter.certManagerDeploymentLabels" . | nindent 4 }}
 spec:
-  storageClassName: microk8s-hostpath
+  storageClassName: "{{ .Values.certManagerDeployment.deployment.certImporter.persistentVolume.storageClass }}"
   accessModes:
     - ReadWriteMany
   resources:
