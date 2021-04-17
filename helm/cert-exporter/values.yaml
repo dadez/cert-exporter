@@ -44,7 +44,7 @@ certManagerDeployment:
     certImporter:
       image:
         repository: dadez/file-upload
-        tag: v0.0.21
+        tag: v0.0.23
         pullPolicy: IfNotPresent
       env:
         # - name: STATIC_FILES_PATH
