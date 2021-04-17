@@ -43,7 +43,7 @@ var (
 			Name:      "kubeconfig_expires_in_seconds",
 			Help:      "Number of seconds til the cert in the kubeconfig expires.",
 		},
-		[]string{"filename", "type", "name", "nodename"},
+		[]string{"filename", "type", "cn", "issuer", "name", "nodename"},
 	)
 
 	// KubeConfigNotAfterTimestamp is a prometheus gauge that indicates the NotAfter timestamp.
@@ -53,7 +53,7 @@ var (
 			Name:      "kubeconfig_not_after_timestamp",
 			Help:      "Expiration timestamp for cert in the kubeconfig.",
 		},
-		[]string{"filename", "type", "name", "nodename"},
+		[]string{"filename", "type", "cn", "issuer", "name", "nodename"},
 	)
 
 	// SecretExpirySeconds is a prometheus gauge that indicates the number of seconds until a kubernetes secret certificate expires
@@ -75,6 +75,16 @@ var (
 		},
 		[]string{"key_name", "issuer", "cn", "secret_name", "secret_namespace"},
 	)
+
+	// AwsCertExpirySeconds is a prometheus gauge that indicates the number of seconds until certificates on AWS expires.
+	AwsCertExpirySeconds = prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Namespace: namespace,
+			Name:      "cert_expires_in_seconds_aws",
+			Help:      "Number of seconds til the cert expires.",
+		},
+		[]string{"secretName", "key", "file", "issuer", "cn"},
+	)
 )
 
 func init() {
@@ -85,4 +95,5 @@ func init() {
 	prometheus.MustRegister(KubeConfigNotAfterTimestamp)
 	prometheus.MustRegister(SecretExpirySeconds)
 	prometheus.MustRegister(SecretNotAfterTimestamp)
+	prometheus.MustRegister(AwsCertExpirySeconds)
 }

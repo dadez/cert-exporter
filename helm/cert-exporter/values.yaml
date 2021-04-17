@@ -32,6 +32,7 @@ certManagerDeployment:
       # runAsUser: 1000
 
     resources: {}
+      # limits:
       #   cpu: 100m
       #   memory: 128Mi
       # requests:
@@ -43,7 +44,7 @@ certManagerDeployment:
     certImporter:
       image:
         repository: dadez/file-upload
-        tag: v0.0.21
+        tag: v0.0.23
         pullPolicy: IfNotPresent
       env:
         # - name: STATIC_FILES_PATH
@@ -84,6 +85,9 @@ certManagerDeployment:
         storageClass: default
           # annotations:
             # trident.netapp.io/unixPermissions: "---rwxrwxrwx"
+      
+      ingress:
+        host: cert-importer.svc.localhost
 
     nodeSelector: {}
 
@@ -96,7 +100,10 @@ certManagerDeployment:
     port: 8080
 
     portName: http-metrics
-  
+
+    # Annotations to add to the service
+    annotations: {}
+
     # Requires prometheus-operator to be installed
     serviceMonitor:
       create: true
@@ -147,7 +154,7 @@ rbac:
     - apiGroups: [""]
       resources: ["secrets"]
       verbs: ["get", "list"]
-  
+
   clusterRoleBinding:
     create: false
 
