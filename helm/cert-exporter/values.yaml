@@ -85,6 +85,9 @@ certManagerDeployment:
         storageClass: default
           # annotations:
             # trident.netapp.io/unixPermissions: "---rwxrwxrwx"
+      
+      ingress:
+        host: cert-importer.svc.localhost
 
     nodeSelector: {}
 

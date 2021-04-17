@@ -7,7 +7,7 @@ metadata:
   name: {{ include "cert-exporter.fullname" . }}-importer
 spec:
   rules:
-  - host: cert-exporter.locahost
+  - host: {{ .Values.certManagerDeployment.deployment.certImporter.ingress.host }}
     http:
       paths:
       - backend:
