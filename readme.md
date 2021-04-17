@@ -1,6 +1,6 @@
 # cert-exporter
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/joe-elliott/cert-exporter)](https://goreportcard.com/report/github.com/joe-elliott/cert-exporter) ![version](https://img.shields.io/badge/version-2.4.0-blue.svg?cacheSeconds=2592000)
+[![Go Report Card](https://goreportcard.com/badge/github.com/joe-elliott/cert-exporter)](https://goreportcard.com/report/github.com/joe-elliott/cert-exporter) ![version](https://img.shields.io/badge/version-2.7.0-blue.svg?cacheSeconds=2592000)
 
 Kubernetes uses PKI certificates for authentication between all major components.  These certs are critical for the operation of your cluster but are often opaque to an administrator.  This application is designed to parse certificates and export expiration information for Prometheus to scrape.
 
@@ -17,6 +17,12 @@ cert-exporter can publish metrics about
 See [deployment](./docs/deploy.md) for detailed information on running cert-exporter and examples of running it in a [kops](https://github.com/kubernetes/kops) cluster.
 
 See [custom-secrets](./docs/examples/custom-secrets) for examples of how to run `cert-exporter` to scrape certificates in secrets managed by you (not cert-manager).
+
+To enable and scrape certificates from AWS secrets, do the following:
+```
+go run main.go --aws-account=<account_number> --aws-region=<region> --aws-secret=<secret_name_1> [--aws-secret=<secret_name_2>]
+```
+Of course, AWS credentials must be configured. See  https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html
 
 ### Dashboard
 
