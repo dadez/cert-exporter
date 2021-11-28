@@ -133,7 +133,7 @@ dashboards:
 certImporter:
   image:
     repository: dadez/file-upload
-    tag: v0.0.23
+    tag: v0.0.24
     pullPolicy: IfNotPresent
   env:
     # - name: STATIC_FILES_PATH
