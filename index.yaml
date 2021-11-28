@@ -3,12 +3,12 @@ entries:
   cert-exporter:
   - apiVersion: v2
     appVersion: v2.7.0
-    created: "2021-04-17T09:32:37.936041886Z"
+    created: "2021-11-28T14:17:47.235946832Z"
     description: Monitors and exposes PKI information as Prometheus metrics
-    digest: 4c3777beaa6a86ce42abcdfbb96e543d6d856a360f0b7778835ee67cd1684449
+    digest: 6dbc6bc6052670c161e75d43c71efac8d4dacc53c0ffd703cc2beecf306206da
     name: cert-exporter
     type: application
     urls:
-    - https://github.com/dadez/cert-exporter/releases/download/cert-exporter-2.7.0/cert-exporter-2.7.0.tgz
-    version: 2.7.0
-generated: "2021-04-17T09:32:37.184492287Z"
+    - https://github.com/dadez/cert-exporter/releases/download/cert-exporter-3.0.1/cert-exporter-3.0.1.tgz
+    version: 3.0.1
+generated: "2021-11-28T14:17:46.987176008Z"
