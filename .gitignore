@@ -4,3 +4,4 @@ test/files/certs
 test/files/certsSibling
 test/files/kubeConfigSibling
 run.sh
+.idea/**

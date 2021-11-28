@@ -1,44 +1,47 @@
+certManager:
+  # DaemonSet or Deployment
+  kind: Deployment
+  replicaCount: 1
 
-# Right now this chart only supports Deployments.
-# In future it might be extended to support Daemonsets as well.
+  image:
+    repository: joeelliott/cert-exporter
+    # The default tag is ".Chart.AppVersion", only set "tag" to override that
+    tag: 
+    pullPolicy: IfNotPresent
+    command: ["./app"]
+    args:
+      - --secrets-annotation-selector=cert-manager.io/certificate-name
+      - --secrets-include-glob=*.crt
+      - --logtostderr
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
 
-certManagerDeployment:
-  deployment:
-    replicaCount: 1
+  podAnnotations: {}
+  # environment: prod
+  # prometheus.io/scrape: true
+  # prometheus.io/port: 8080
+  # prometheus.io/path: /metrics
 
-    image:
-      repository: joeelliott/cert-exporter
-      pullPolicy: IfNotPresent
-      command: ["./app"]
-      args:
-        #- --secrets-annotation-selector=cert-manager.io/certificate-name
-        #- --secrets-include-glob=*.crt
-        - --logtostderr
-        - --include-cert-glob=/data/*.pem
-        - --polling-period=24h
-    imagePullSecrets: []
-    nameOverride: ""
-    fullnameOverride: ""
+  podSecurityContext: {}
+  # fsGroup: 2000
 
-    podSecurityContext: {}
-    # fsGroup: 2000
+  securityContext: {}
+    # capabilities:
+    #   drop:s
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
 
-    securityContext: {}
-      # capabilities:
-      #   drop:s
-      #   - ALL
-      # readOnlyRootFilesystem: true
-      # runAsNonRoot: true
-      # runAsUser: 1000
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
 
-    resources: {}
-      # limits:
-      #   cpu: 100m
-      #   memory: 128Mi
-      # requests:
-      #   cpu: 100m
-      #   memory: 128Mi
-    
 
     # adding a container to be able to import certificates
     certImporter:
@@ -88,21 +91,33 @@ certManagerDeployment:
       
       ingress:
         host: cert-importer.svc.localhost
+=======
+  nodeSelector: {}
+>>>>>>> b946dae455d6f3590cc89c9371cd554012d5872e
 
-    nodeSelector: {}
+  tolerations: []
 
-    tolerations: []
+  affinity: {}
 
-    affinity: {}
+  volumes: []
+    # - name: kubelet
+    #   hostPath:
+    #     path: /var/lib/kubelet
+    #     type: Directory
+  volumeMounts: []
+    # - mountPath: /var/lib/kubelet/pki
+    #   mountPropagation: HostToContainer
+    #   name: kubelet
+    #   readOnly: true
 
-  service:
-    type: ClusterIP
-    port: 8080
+service:
+  type: ClusterIP
+  port: 8080
 
-    portName: http-metrics
+  portName: http-metrics
 
-    # Annotations to add to the service
-    annotations: {}
+  # Annotations to add to the service
+  annotations: {}
 
     # Requires prometheus-operator to be installed
     serviceMonitor:
@@ -117,22 +132,22 @@ certManagerDeployment:
       ##
       interval: 60s
 
-      ## metric relabel configs to apply to samples before ingestion.
-      ##
-      metricRelabelings: []
-      # - action: keep
-      #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
-      #   sourceLabels: [__name__]
+    ## metric relabel configs to apply to samples before ingestion.
+    ##
+    metricRelabelings: []
+    # - action: keep
+    #   regex: 'kube_(daemonset|deployment|pod|namespace|node|statefulset).+'
+    #   sourceLabels: [__name__]
 
-      # relabel configs to apply to samples before ingestion.
-      ##
-      relabelings: []
-      # - sourceLabels: [__meta_kubernetes_pod_node_name]
-      #   separator: ;
-      #   regex: ^(.*)$
-      #   targetLabel: nodename
-      #   replacement: $1
-      #   action: replace
+    # relabel configs to apply to samples before ingestion.
+    ##
+    relabelings: []
+    # - sourceLabels: [__meta_kubernetes_pod_node_name]
+    #   separator: ;
+    #   regex: ^(.*)$
+    #   targetLabel: nodename
+    #   replacement: $1
+    #   action: replace
 
 rbac:
   serviceAccount:
@@ -162,7 +177,7 @@ dashboards:
   create: false
   # Labels to add to all dashboard ConfigMaps
   additionalLabels:
-    grafana-dashboard: "1"
+    grafana_dashboard: "1"
   certManagerDashboard:
     create: false
   namespace: monitoring
