@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  {{- if .Values.certImporter.persistentVolume.annotations }}
+  annotations:
+    {{ toYaml .Values.certImporter.persistentVolume.annotations | indent 2 }}
+  {{- end }}
+  name: {{ include "cert-exporter.fullname" . }}
+spec:
+  storageClassName: "{{ .Values.certImporter.persistentVolume.storageClass }}"
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 128Mi

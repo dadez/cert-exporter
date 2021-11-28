@@ -42,58 +42,7 @@ certManager:
     #   cpu: 100m
     #   memory: 128Mi
 
-
-    # adding a container to be able to import certificates
-    certImporter:
-      image:
-        repository: dadez/file-upload
-        tag: v0.0.23
-        pullPolicy: IfNotPresent
-      env:
-        # - name: STATIC_FILES_PATH
-        #   value: "."
-        - name: AUTH_FILES_PATH
-          value: "/auth"
-        - name: UPLOADS_DIRECTORY_PATH
-          value: "/uploads"
-        # - name: LOG_LEVEL
-        #   value: "info"
-      imagePullSecrets: []
-      nameOverride: ""
-      fullnameOverride: ""
-
-      podSecurityContext: {}
-      # fsGroup: 2000
-
-      securityContext: {}
-        # capabilities:
-        #   drop:s
-        #   - ALL
-        # readOnlyRootFilesystem: true
-        # runAsNonRoot: true
-        # runAsUser: 1000
-
-      resources: {}
-        #   cpu: 100m
-        #   memory: 128Mi
-        # requests:
-        #   cpu: 100m
-        #   memory: 128Mi
-
-      credentials:
-        username: user1
-        password: secret1
-
-      persistentVolume:
-        storageClass: default
-          # annotations:
-            # trident.netapp.io/unixPermissions: "---rwxrwxrwx"
-      
-      ingress:
-        host: cert-importer.svc.localhost
-=======
   nodeSelector: {}
->>>>>>> b946dae455d6f3590cc89c9371cd554012d5872e
 
   tolerations: []
 
@@ -119,18 +68,17 @@ service:
   # Annotations to add to the service
   annotations: {}
 
-    # Requires prometheus-operator to be installed
-    serviceMonitor:
-      create: true
+  # Requires prometheus-operator to be installed
+  serviceMonitor:
+    create: false
 
-      # cannot be empty
-      additionalLabels:
-        prometheus.io/load-rule: "true"
-        # release: prometheus-service
-    
-      ## Scrape interval. If not set, the Prometheus default scrape interval is used.
-      ##
-      interval: 60s
+    # cannot be empty
+    additionalLabels:
+      prometheus.io/load-rule: "true"
+
+    ## Scrape interval. If not set, the Prometheus default scrape interval is used.
+    ##
+    interval: 20s
 
     ## metric relabel configs to apply to samples before ingestion.
     ##
@@ -161,7 +109,7 @@ rbac:
 
   clusterRole:
     # New role to grant to the service account
-    create: false
+    create: true
     # Annotations to add to the service account
     annotations: {}
     # Rules for the Role
@@ -171,13 +119,61 @@ rbac:
       verbs: ["get", "list"]
 
   clusterRoleBinding:
-    create: false
+    create: true
 
 dashboards:
-  create: false
   # Labels to add to all dashboard ConfigMaps
   additionalLabels:
     grafana_dashboard: "1"
   certManagerDashboard:
-    create: false
+    create: true
   namespace: monitoring
+
+# adding a container to be able to import certificates
+certImporter:
+  image:
+    repository: dadez/file-upload
+    tag: v0.0.23
+    pullPolicy: IfNotPresent
+  env:
+    # - name: STATIC_FILES_PATH
+    #   value: "."
+    - name: AUTH_FILES_PATH
+      value: "/auth"
+    - name: UPLOADS_DIRECTORY_PATH
+      value: "/uploads"
+    # - name: LOG_LEVEL
+    #   value: "info"
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: ""
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:s
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  resources: {}
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  credentials:
+    username: user1
+    password: secret1
+
+  persistentVolume:
+    storageClass: default
+      # annotations:
+        # trident.netapp.io/unixPermissions: "---rwxrwxrwx"
+  
+  ingress:
+    host: cert-importer.svc.localhost

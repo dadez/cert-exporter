@@ -3,11 +3,11 @@ kind: Ingress
 metadata:
   annotations: {}
   labels:
-    {{ include "cert-exporter.certManagerDeploymentLabels" . | nindent 4 }}
+    {{ include "cert-exporter.certManagerLabels" . | nindent 4 }}
   name: {{ include "cert-exporter.fullname" . }}-importer
 spec:
   rules:
-  - host: {{ .Values.certManagerDeployment.deployment.certImporter.ingress.host }}
+  - host: {{ .Values.certImporter.ingress.host }}
     http:
       paths:
       - backend:

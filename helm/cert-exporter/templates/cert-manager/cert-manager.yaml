@@ -48,6 +48,38 @@ spec:
             {{- toYaml .Values.certManager.resources | nindent 12 }}
           volumeMounts:
            {{- toYaml .Values.certManager.volumeMounts | nindent 12 }}
+        - name: cert-importer
+          image: "{{ .Values.certImporter.image.repository }}:{{ .Values.certImporter.image.tag }}"
+          imagePullPolicy: {{ .Values.certImporter.image.pullPolicy }}
+          {{- with .Values.certImporter.env  }}
+          env:
+            {{- toYaml . | nindent 12}}
+          {{- end}}
+          ports:
+            - name: http
+              containerPort: 4500
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 4500
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+          livenessProbe:
+            tcpSocket:
+              port: 4500
+            initialDelaySeconds: 5
+            periodSeconds: 20
+            timeoutSeconds: 2
+          resources:
+            {{- toYaml .Values.certImporter.resources | nindent 12 }}
+          volumeMounts:
+            - mountPath: "/uploads"
+              name: data
+            - mountPath: /auth
+              name: importer-credentials
       {{- with .Values.certManager.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
