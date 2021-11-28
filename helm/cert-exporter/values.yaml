@@ -70,7 +70,7 @@ service:
 
   # Requires prometheus-operator to be installed
   serviceMonitor:
-    create: false
+    create: true
 
     # cannot be empty
     additionalLabels:
@@ -109,7 +109,7 @@ rbac:
 
   clusterRole:
     # New role to grant to the service account
-    create: true
+    create: false
     # Annotations to add to the service account
     annotations: {}
     # Rules for the Role
@@ -119,14 +119,14 @@ rbac:
       verbs: ["get", "list"]
 
   clusterRoleBinding:
-    create: true
+    create: false
 
 dashboards:
   # Labels to add to all dashboard ConfigMaps
   additionalLabels:
     grafana_dashboard: "1"
   certManagerDashboard:
-    create: true
+    create: false
   namespace: monitoring
 
 # adding a container to be able to import certificates
